@@ -1,20 +1,29 @@
 package com.romansmolakov.solgame;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -24,19 +33,19 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     private ViewGroup mainLayout;
-    private CardView blueCard, greenCard;
+    private CardView blueCard, greenCard, redCard;
     private ImageView ivBack, ivSettings;
 
     private int xDelta;
     private int yDelta;
 
-    private HashMap<CardView, Pair<Integer, Integer>> cardViewLayoutParamsHashMap = new HashMap<>();
-    private RelativeLayout.LayoutParams blueCardParams, greenCardParams;
+    private RelativeLayout.LayoutParams blueCardParams, greenCardParams, redCardParams;
     private Set<View> blueStack = new LinkedHashSet<>();
-    private View lastViewInBlueStack;
     private Set<View> greenStack = new LinkedHashSet<>();
-    private View lastViewInGreenStack;
-    private LinkedList<Pair<Integer, Integer>> history = new LinkedList<>();
+    private Set<View> redStack = new LinkedHashSet<>();
+    private LinkedList<Pair<View, Integer>> history = new LinkedList<>();
+
+    Drawable[]  back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,36 +55,44 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        back = new Drawable[]{getResources().getDrawable(R.drawable.spades_q), getResources().getDrawable(R.drawable.hearts_k), getResources().getDrawable(R.drawable.diamons_k),
+                getResources().getDrawable(R.drawable.diamons_q),getResources().getDrawable(R.drawable.hearts_j)};
+
         mainLayout = (RelativeLayout) findViewById(R.id.main);
         blueCard = (CardView) findViewById(R.id.blueCard);
         greenCard = (CardView) findViewById(R.id.greenCard);
+        redCard = (CardView) findViewById(R.id.redCard);
         ivBack = (ImageView) findViewById(R.id.ivBack);
         ivSettings = (ImageView) findViewById(R.id.ivSettings);
 //        blueCard.setOnTouchListener(onTouchListener());
         blueCardParams = (RelativeLayout.LayoutParams) blueCard
                 .getLayoutParams();
-
         greenCardParams = (RelativeLayout.LayoutParams) greenCard
                 .getLayoutParams();
-        int[] colors = {getResources().getColor(android.R.color.holo_orange_dark), getResources().getColor(android.R.color.holo_red_light), getResources().getColor(android.R.color.holo_purple),
-                getResources().getColor(android.R.color.holo_blue_dark), getResources().getColor(R.color.colorPrimary)};
+        redCardParams = (RelativeLayout.LayoutParams) redCard
+                .getLayoutParams();
+
+//        ArrayList<Integer> list = new ArrayList<>();
+//        list.add(1);
+//        list.add(2);
+//        list.add(3);
+//        list.add(4);
+//        list.add(5);
+//        Collections.shuffle(list);
+//        System.out.println(list);
+
         CardView card = new CardView(this);
         for (int i = 0; i < 5; i++) {
             card = new CardView(this);
-            card.setCardBackgroundColor(colors[i]);
-            card.setUseCompatPadding(true);
-            RelativeLayout.LayoutParams lpCard = new RelativeLayout.LayoutParams(blueCardParams.width, blueCardParams.height);
-            lpCard.leftMargin = blueCardParams.leftMargin;
+
             blueStack.add(card);
-            lpCard.topMargin = blueCardParams.topMargin + (80 * blueStack.size());
-            card.setCardElevation(blueCard.getCardElevation());
-            cardViewLayoutParamsHashMap.put(card, new Pair<>(lpCard.topMargin, lpCard.leftMargin));
-            mainLayout.addView(card, lpCard);
+            newCard(card);
+
 
         }
 
         card.setOnTouchListener(onTouchListener());
-        lastViewInBlueStack = card;
+//        lastViewInBlueStack = card;
 
 //        CardView greenCard = new CardView(this);
 //        RelativeLayout.LayoutParams lpCard = new RelativeLayout.LayoutParams(blueCardParams.width, blueCardParams.height);
@@ -90,58 +107,85 @@ public class MainActivity extends AppCompatActivity {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!history.isEmpty()){
-                    if(history.getLast().second == blueCardParams.leftMargin){
+                if (!history.isEmpty()) {
+                    View card = history.getLast().first;
+                    //animation
 
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) lastViewInBlueStack
-                                .getLayoutParams();
+                    Integer stack = history.getLast().second;
+                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams)
+                            card.getLayoutParams();
+                    if (stack == 1) {
+                        blueStack.add(card);
+                        greenStack.remove(card);
+                        redStack.remove(card);
+                        lParams.topMargin = blueCardParams.topMargin + (80 * blueStack.size());
+                        lParams.leftMargin = blueCardParams.leftMargin;
 
-                        lastViewInGreenStack.setOnTouchListener(null);
-                        blueStack.remove(lastViewInBlueStack);
-                        greenStack.add(lastViewInBlueStack);
-                        updateElevation(greenStack);
-                        layoutParams.topMargin = greenCardParams.topMargin + (80 * greenStack.size());
-                        layoutParams.leftMargin = greenCardParams.leftMargin;
-                        lastViewInGreenStack = lastViewInBlueStack;
-                        lastViewInBlueStack = lastView(blueStack);
-
-                        lastViewInGreenStack.setOnTouchListener(onTouchListener());
-                        if (lastViewInBlueStack != null)
-                            lastViewInBlueStack.setOnTouchListener(onTouchListener());
-                        if (lastViewInGreenStack != null)
-                            lastViewInGreenStack.setOnTouchListener(onTouchListener());
-                        lastViewInGreenStack.setLayoutParams(layoutParams);
-                        history.removeLast();
-                    }else if(history.getLast().second == greenCardParams.leftMargin){
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) lastViewInGreenStack
-                                .getLayoutParams();
-
-                        lastViewInBlueStack.setOnTouchListener(null);
-                        blueStack.add(lastViewInGreenStack);
-                        greenStack.remove(lastViewInGreenStack);
-                        updateElevation(blueStack);
-                        layoutParams.topMargin = blueCardParams.topMargin + (80 * blueStack.size());
-                        layoutParams.leftMargin = blueCardParams.leftMargin;
-                        lastViewInBlueStack = lastViewInGreenStack;
-                        lastViewInGreenStack = lastView(greenStack);
-
-                        lastViewInBlueStack.setOnTouchListener(onTouchListener());
-                        if (lastViewInBlueStack != null)
-                            lastViewInBlueStack.setOnTouchListener(onTouchListener());
-                        if (lastViewInGreenStack != null)
-                            lastViewInGreenStack.setOnTouchListener(onTouchListener());
-                        lastViewInBlueStack.setLayoutParams(layoutParams);
-                        history.removeLast();
+                    } else if (stack == 2) {
+                        greenStack.add(card);
+                        blueStack.remove(card);
+                        redStack.remove(card);
+                        lParams.topMargin = greenCardParams.topMargin + (80 * greenStack.size());
+                        lParams.leftMargin = greenCardParams.leftMargin;
+                    } else if (stack == 3) {
+                        greenStack.remove(card);
+                        blueStack.remove(card);
+                        redStack.add(card);
+                        lParams.topMargin = redCardParams.topMargin + (80 * redStack.size());
+                        lParams.leftMargin = redCardParams.leftMargin;
                     }
+                    lParams.rightMargin = 0;
+                    lParams.bottomMargin = 0;
+                    card.setLayoutParams(lParams);
                     mainLayout.invalidate();
-//                    if(history.size()==1) history.clear();
+
+                    updateElevation(blueStack);
+                    updateElevation(greenStack);
+                    updateElevation(redStack);
+                    lastView(blueStack).setOnTouchListener(onTouchListener());
+                    lastView(greenStack).setOnTouchListener(onTouchListener());
+                    lastView(redStack).setOnTouchListener(onTouchListener());
+                    history.removeLast();
                 }
             }
         });
+
+        ivSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    int k = 0;
+    private void newCard(CardView card){
+        card.setUseCompatPadding(true);
+        RelativeLayout.LayoutParams lpCard = new RelativeLayout.LayoutParams(blueCardParams.width, blueCardParams.height);
+        lpCard.leftMargin = blueCardParams.leftMargin;
+
+        lpCard.topMargin = blueCardParams.topMargin + (Constants.TOP_MARGIN * blueStack.size());
+        card.setCardElevation(blueCard.getCardElevation());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        ImageView image = new ImageView(card.getContext());
+//        card.setBackgroundColor(getResources().getColor(android.R.color.black));
+        image.setPadding(5,0,5,0);
+        image.setLayoutParams(params);
+        image.setImageDrawable(back[k++]);
+
+        card.addView(image);
+
+
+        mainLayout.addView(card, lpCard);
     }
 
 
-    private View lastView(Set<View> list){
+    private View lastView(Set<View> list) {
         View result = new View(this);
         for (View view : list) {
             result = view;
@@ -149,11 +193,19 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    private void updateElevation(Set<View> list){
+    private void updateElevation(Set<View> list) {
         int level = 0;
         for (View view : list) {
             ViewCompat.setElevation(view, ++level);
+            view.setOnTouchListener(null);
         }
+    }
+
+    private Integer getStack(View view) {
+        if (blueStack.contains(view)) return 1;
+        if (greenStack.contains(view)) return 2;
+        if (redStack.contains(view)) return 3;
+        return 0;
     }
 
     private View.OnTouchListener onTouchListener() {
@@ -169,8 +221,8 @@ public class MainActivity extends AppCompatActivity {
                 boolean onStack = false;
                 final int x = (int) event.getRawX();
                 final int y = (int) event.getRawY();
-
-
+                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams)
+                        view.getLayoutParams();
 
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
@@ -180,93 +232,88 @@ public class MainActivity extends AppCompatActivity {
 //                        view.setElevation(view.getElevation() + 1f);
 //                        Log.d("card", String.valueOf(ViewCompat.getTranslationZ(view)));
 //
-                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams)
-                                view.getLayoutParams();
-
                         xDelta = x - lParams.leftMargin;
                         yDelta = y - lParams.topMargin;
                         break;
 
                     case MotionEvent.ACTION_UP:
-//                        Log.d("card", "up");
-//                        ViewCompat.setTranslationZ(view, 0f);
-//                        ViewCompat.setElevation(view, 0f);
-                        if(!onStack && cardViewLayoutParamsHashMap.containsKey(view)){
-                            RelativeLayout.LayoutParams backParams = (RelativeLayout.LayoutParams)
-                                    view.getLayoutParams();
-                            backParams.topMargin = cardViewLayoutParamsHashMap.get(view).first;
-                            backParams.leftMargin = cardViewLayoutParamsHashMap.get(view).second;
-                            view.setLayoutParams(backParams);
-                            updateElevation(blueStack);
-                            updateElevation(greenStack);
-//                            ViewCompat.setElevation(view, cardViewLayoutParamsHashMap.size());
-
+                        if (!blueStack.contains(view) && blueCardParams.leftMargin == lParams.leftMargin && blueCardParams.topMargin == lParams.topMargin - (Constants.TOP_MARGIN * (blueStack.size() + 1))) {
+                            history.add(new Pair<View, Integer>(view, getStack(view)));
+                            blueStack.add(view);
+                            redStack.remove(view);
+                            greenStack.remove(view);
+                            Log.d("card", "blue stock");
+                        } else if (!greenStack.contains(view) && greenCardParams.leftMargin == lParams.leftMargin && greenCardParams.topMargin == lParams.topMargin - (Constants.TOP_MARGIN * (greenStack.size() + 1))) {
+                            history.add(new Pair<View, Integer>(view, getStack(view)));
+                            blueStack.remove(view);
+                            redStack.remove(view);
+                            greenStack.add(view);
+//                            Log.d("card", "saved history " + historicalPosition.leftMargin);
+                            Log.d("card", "green stock");
+                        } else if (!redStack.contains(view) && redCardParams.leftMargin == lParams.leftMargin && redCardParams.topMargin == lParams.topMargin - (Constants.TOP_MARGIN * (redStack.size() + 1))) {
+                            history.add(new Pair<View, Integer>(view, getStack(view)));
+                            blueStack.remove(view);
+                            greenStack.remove(view);
+                            redStack.add(view);
+//                            Log.d("card", "saved history " + historicalPosition.leftMargin);
+                            Log.d("card", "green stock");
+                        } else {
+                            Log.d("card", "on back");
+                            if (blueStack.contains(view)) {
+                                lParams.topMargin = blueCardParams.topMargin + (Constants.TOP_MARGIN * blueStack.size());
+                                lParams.leftMargin = blueCardParams.leftMargin;
+                            } else if (greenStack.contains(view)) {
+                                lParams.topMargin = greenCardParams.topMargin + (Constants.TOP_MARGIN * greenStack.size());
+                                lParams.leftMargin = greenCardParams.leftMargin;
+                            } else if (redStack.contains(view)) {
+                                lParams.topMargin = redCardParams.topMargin + (Constants.TOP_MARGIN * redStack.size());
+                                lParams.leftMargin = redCardParams.leftMargin;
+                            }
+//                            lParams.topMargin = backPosition.first;
+//                            lParams.leftMargin = backPosition.second;
+                            view.setLayoutParams(lParams);
                         }
-                        Log.d("card", "UP");
+                        updateElevation(blueStack);
+                        updateElevation(greenStack);
+                        updateElevation(redStack);
+                        lastView(blueStack).setOnTouchListener(onTouchListener());
+                        lastView(greenStack).setOnTouchListener(onTouchListener());
+                        lastView(redStack).setOnTouchListener(onTouchListener());
                         break;
 
                     case MotionEvent.ACTION_MOVE:
 //                        Log.d("card", "move");
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view
-                                .getLayoutParams();
                         ViewCompat.setElevation(view, 100f);
-                        layoutParams.leftMargin = x - xDelta;
-                        layoutParams.topMargin = y - yDelta;
-//                        if(!blueStack.contains(view)) {
-                            if (blueCardParams.leftMargin - 30 <= layoutParams.leftMargin & blueCardParams.leftMargin + 30 >= layoutParams.leftMargin
-                                    && blueCardParams.topMargin - 60 <= layoutParams.topMargin & blueCardParams.topMargin + 60 + (80 * blueStack.size()) >= layoutParams.topMargin) {
+                        lParams.leftMargin = x - xDelta;
+                        lParams.topMargin = y - yDelta;
+                        if (!blueStack.contains(view) && blueCardParams.leftMargin - Constants.RANGE_STACK_VERTICAL <= lParams.leftMargin & blueCardParams.leftMargin + Constants.RANGE_STACK_VERTICAL >= lParams.leftMargin
+                                && blueCardParams.topMargin - Constants.RANGE_STACK_HORIZONTAL <= lParams.topMargin & blueCardParams.topMargin + Constants.RANGE_STACK_HORIZONTAL + (Constants.TOP_MARGIN * (blueStack.size() + 1)) >= lParams.topMargin) {
 //                            Log.d("card", "got card!");
-                                layoutParams.leftMargin = blueCardParams.leftMargin;
-                                lastView(blueStack).setOnTouchListener(null);
-                                blueStack.add(view);
-                                greenStack.remove(view);
-                                updateElevation(blueStack);
-                                layoutParams.topMargin = blueCardParams.topMargin + (80 * blueStack.size());
+                            lParams.leftMargin = blueCardParams.leftMargin;
+                            lParams.topMargin = blueCardParams.topMargin + (Constants.TOP_MARGIN * (blueStack.size() + 1));
 
-
-                                onStack = true;
-
-                                lastViewInBlueStack = view;
-                                lastViewInGreenStack = lastView(greenStack);
-                                lastViewInGreenStack.setOnTouchListener(onTouchListener());
-                                if (lastViewInBlueStack != null)
-                                    lastViewInBlueStack.setOnTouchListener(onTouchListener());
-                                if (lastViewInGreenStack != null)
-                                    lastViewInGreenStack.setOnTouchListener(onTouchListener());
-                            }
-//                        }
-//                        if(!greenStack.contains(view)) {
-                            if (greenCardParams.leftMargin - 30 <= layoutParams.leftMargin & greenCardParams.leftMargin + 30 >= layoutParams.leftMargin
-                                    && greenCardParams.topMargin - 60 <= layoutParams.topMargin & greenCardParams.topMargin + 60 + (80 * greenStack.size()) >= layoutParams.topMargin) {
-//                            Log.d("card", "got card!");
-                                layoutParams.leftMargin = greenCardParams.leftMargin;
-                                blueStack.remove(view);
-                                lastView(greenStack).setOnTouchListener(null);
-                                greenStack.add(view);
-                                updateElevation(greenStack);
-                                layoutParams.topMargin = greenCardParams.topMargin + (80 * greenStack.size());
-                                onStack = true;
-                                lastViewInGreenStack = view;
-                                lastViewInBlueStack = lastView(blueStack);
-                                if (lastViewInBlueStack != null)
-                                    lastViewInBlueStack.setOnTouchListener(onTouchListener());
-                                if (lastViewInGreenStack != null)
-                                    lastViewInGreenStack.setOnTouchListener(onTouchListener());
-                            }
-//                        }
-                        if(onStack){
-                            cardViewLayoutParamsHashMap.put((CardView) view, new Pair<>(layoutParams.topMargin, layoutParams.leftMargin));
-                            if(history.isEmpty() ||  (history.getLast().first != layoutParams.topMargin && history.getLast().second != layoutParams.leftMargin)) {
-                                history.add(new Pair<>(layoutParams.topMargin, layoutParams.leftMargin));
-                                Log.d("card", "" + layoutParams.topMargin);
-                            }
 
                         }
 
+                        if (!greenStack.contains(view) && greenCardParams.leftMargin - Constants.RANGE_STACK_VERTICAL <= lParams.leftMargin & greenCardParams.leftMargin + Constants.RANGE_STACK_VERTICAL >= lParams.leftMargin
+                                && greenCardParams.topMargin - Constants.RANGE_STACK_HORIZONTAL <= lParams.topMargin & greenCardParams.topMargin + Constants.RANGE_STACK_HORIZONTAL + (Constants.TOP_MARGIN * (greenStack.size() + 1)) >= lParams.topMargin) {
+//                            Log.d("card", "got card!");
+                            lParams.leftMargin = greenCardParams.leftMargin;
+                            lParams.topMargin = greenCardParams.topMargin + (Constants.TOP_MARGIN * (greenStack.size() + 1));
 
-                        layoutParams.rightMargin = 0;
-                        layoutParams.bottomMargin = 0;
-                        view.setLayoutParams(layoutParams);
+                        }
+
+                        if (!redStack.contains(view) && redCardParams.leftMargin - Constants.RANGE_STACK_VERTICAL <= lParams.leftMargin & redCardParams.leftMargin + Constants.RANGE_STACK_VERTICAL >= lParams.leftMargin
+                                && redCardParams.topMargin - Constants.RANGE_STACK_HORIZONTAL <= lParams.topMargin & redCardParams.topMargin + Constants.RANGE_STACK_HORIZONTAL + (Constants.TOP_MARGIN * (redStack.size() + 1)) >= lParams.topMargin) {
+//                            Log.d("card", "got card!");
+                            lParams.leftMargin = redCardParams.leftMargin;
+                            lParams.topMargin = redCardParams.topMargin + (Constants.TOP_MARGIN * (redStack.size() + 1));
+
+                        }
+
+                        lParams.rightMargin = 0;
+                        lParams.bottomMargin = 0;
+                        view.setLayoutParams(lParams);
                         break;
                 }
                 mainLayout.invalidate();
@@ -274,4 +321,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
+
+
 }

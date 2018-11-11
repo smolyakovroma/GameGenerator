@@ -32,7 +32,7 @@
         app:cardBackgroundColor="@android:color/holo_green_light"
         android:layout_width="60dp"
         app:cardElevation="0dp"
-        android:layout_marginLeft="210dp"
+        android:layout_marginLeft="110dp"
         android:layout_marginTop="10dp"
         android:layout_height="90dp">
         <TextView
@@ -43,6 +43,19 @@
             android:textStyle="bold"
             android:textSize="10pt"
             android:text="B"/>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/redCard"
+        app:cardBackgroundColor="@android:color/holo_red_dark"
+        android:layout_width="60dp"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="90dp">
+
 
     </android.support.v7.widget.CardView>
 
