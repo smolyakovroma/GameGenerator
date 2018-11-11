@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:background="@android:color/holo_green_dark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/blueCard"
+        app:cardBackgroundColor="@android:color/holo_blue_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="60dp"
+        android:layout_height="90dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:text="A"
+            android:textSize="10pt" />
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/greenCard"
+        app:cardBackgroundColor="@android:color/holo_green_light"
+        android:layout_width="60dp"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="90dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="10pt"
+            android:text="B"/>
+
+    </android.support.v7.widget.CardView>
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_toLeftOf="@+id/ivSettings"
+        android:src="@drawable/icon_back" />
+
+    <ImageView
+        android:id="@+id/ivSettings"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_settings" />
+
+
+</RelativeLayout>
