@@ -8,33 +8,71 @@
 
     <android.support.v7.widget.CardView
         app:cardUseCompatPadding="true"
-        android:id="@+id/blueCard"
-        app:cardBackgroundColor="@android:color/holo_blue_light"
+        android:id="@+id/stackCards"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
         app:cardElevation="0dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_width="60dp"
-        android:layout_height="90dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:text="A"
-            android:textSize="10pt" />
+        android:layout_height="60dp">
+        <ImageView
+            app:srcCompat="@drawable/backcard_classic_m_full"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/openCards"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="40dp"
+        android:layout_height="60dp">
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textStyle="bold"-->
+            <!--android:text="A"-->
+            <!--android:textSize="10pt" />-->
     </android.support.v7.widget.CardView>
 
 
     <android.support.v7.widget.CardView
         app:cardUseCompatPadding="true"
-        android:id="@+id/greenCard"
+        android:id="@+id/baseHearts"
         app:cardBackgroundColor="@android:color/holo_green_light"
-        android:layout_width="60dp"
+        android:layout_width="40dp"
         app:cardElevation="0dp"
-        android:layout_marginLeft="110dp"
+        android:layout_marginLeft="160dp"
         android:layout_marginTop="10dp"
-        android:layout_height="90dp">
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="B"
+            android:textColor="@android:color/white"
+            android:textSize="10pt"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/baseSpades"
+        app:cardBackgroundColor="@android:color/holo_green_light"
+        android:layout_width="40dp"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="60dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,16 +86,125 @@
 
     <android.support.v7.widget.CardView
         app:cardUseCompatPadding="true"
-        android:id="@+id/redCard"
-        app:cardBackgroundColor="@android:color/holo_red_dark"
-        android:layout_width="60dp"
+        android:id="@+id/baseDiamonds"
+        app:cardBackgroundColor="@android:color/holo_green_light"
+        android:layout_width="40dp"
         app:cardElevation="0dp"
-        android:layout_marginLeft="210dp"
+        android:layout_marginLeft="260dp"
         android:layout_marginTop="10dp"
-        android:layout_height="90dp">
-
+        android:layout_height="60dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="10pt"
+            android:text="B"/>
 
     </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/baseClubs"
+        app:cardBackgroundColor="@android:color/holo_green_light"
+        android:layout_width="40dp"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="310dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="60dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="10pt"
+            android:text="B"/>
+
+    </android.support.v7.widget.CardView>
+
+
+    //stacks
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack1"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack2"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack3"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack4"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack5"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack6"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="260dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:id="@+id/stack7"
+        app:cardBackgroundColor="@android:color/black"
+        android:layout_width="42dp"
+        android:background="@android:color/holo_green_light"
+        app:cardElevation="0dp"
+        android:layout_marginLeft="310dp"
+        android:layout_marginTop="90dp"
+        android:layout_height="60dp"/>
+
+    <ImageView
+        android:id="@+id/ivNewGame"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        app:srcCompat="@drawable/icon_new_game" />
 
     <ImageView
         android:id="@+id/ivBack"
@@ -67,7 +214,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginRight="50dp"
         android:layout_toLeftOf="@+id/ivSettings"
-        android:src="@drawable/icon_back" />
+        app:srcCompat="@drawable/icon_back" />
 
     <ImageView
         android:id="@+id/ivSettings"
@@ -76,8 +223,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/icon_settings" />
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/icon_settings" />
 
 
 </RelativeLayout>
